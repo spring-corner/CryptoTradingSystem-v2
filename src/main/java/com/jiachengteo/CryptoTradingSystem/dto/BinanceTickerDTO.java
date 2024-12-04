@@ -1,4 +1,4 @@
-package com.jiachengteo.CryptoTradingSystem_v2.dto;
+package com.jiachengteo.CryptoTradingSystem.dto;
 
 
 import lombok.Getter;
@@ -12,5 +12,4 @@ public class BinanceTickerDTO {
 	private String bidQty;
 	private String askPrice;
 	private String askQty;
-	
 }

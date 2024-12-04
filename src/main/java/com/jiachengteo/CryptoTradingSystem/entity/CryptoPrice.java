@@ -1,4 +1,4 @@
-package com.jiachengteo.CryptoTradingSystem_v2.entity;
+package com.jiachengteo.CryptoTradingSystem.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.jiachengteo.CryptoTradingSystem_v2;
+package com.jiachengteo.CryptoTradingSystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
