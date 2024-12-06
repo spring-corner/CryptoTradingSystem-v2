@@ -1,6 +1,10 @@
 # Notes
 - H2 is set to persists across SpringBoot restarts currently. This can be modified in `application.properties` file.
 
+## Swagger API documentation
+
+After starting the application, access the swagger doc via this link http://localhost:8080/swagger-ui/index.html
+
 # Starting the application
 - Run `mvn clean install` or Reload pom.xml dependencies from IntelliJ
 - Run the `CryptoTradingSystemV2Application` class
@@ -11,7 +15,7 @@
 
 ```sql
 SELECT * FROM CRYPTO_PRICE;
-SELECT * FROM CRYPTO_PRICE order by TIMESTAMP DESC LIMIT 10; 
+SELECT * FROM CRYPTO_PRICE order by TIMESTAMP DESC LIMIT 4; 
 
 SELECT * FROM WALLET;
 ```
