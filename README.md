@@ -15,7 +15,7 @@ After starting the application, access the swagger doc via this link http://loca
 
 ```sql
 SELECT * FROM CRYPTO_PRICE;
-SELECT * FROM CRYPTO_PRICE order by TIMESTAMP DESC LIMIT 4; 
+SELECT * FROM CRYPTO_PRICE order by TIMESTAMP DESC LIMIT 50;  
 
 SELECT * FROM WALLET;
 ```
