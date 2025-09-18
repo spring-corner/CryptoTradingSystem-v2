@@ -11,7 +11,7 @@ After starting the application, access the swagger doc via this link http://loca
 - To view the DB, go to http://localhost:8080/h2-console/login.jsp 
 	- Example username and password are found in `application.properties` file
 
-### Useful SQL Commands to query H2 DB
+## Useful SQL Commands to query H2 DB
 
 ```sql
 SELECT * FROM CRYPTO_PRICE;
@@ -25,3 +25,11 @@ SHOW COLUMNS FROM CRYPTO_PRICE;
 ```
 
 ![](README_images/h2-console-columns.png)
+
+## Reference data sources 
+
+- Binance: https://api.binance.com/api/v3/ticker/bookTicker
+- Huobi https://api.huobi.pro/market/tickers
+- Coinbase
+- OKX 
+- Bybit 
