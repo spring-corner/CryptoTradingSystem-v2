@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -33,6 +35,8 @@ public class ScheduledTasks {
 	@Autowired
 	private HuobiPriceService huobiPriceService;
 
+    private final List<String> trackedPairs = Arrays.asList("BTCUSDT", "ETHUSDT");
+
 	@Scheduled(fixedRate = 10000) // 10 seconds
 	public void consumeRestService() {
 
@@ -42,14 +46,13 @@ public class ScheduledTasks {
 		// log.info(quote.toString());
 
 		try {// First get the response as DTO
-			BinanceTickerDTO tickerDTO = restTemplate.getForObject("https://api.binance.com/api/v3/ticker/bookTicker?symbol=BTCUSDT", BinanceTickerDTO.class);
+//			BinanceTickerDTO tickerDTO = restTemplate.getForObject("https://api.binance.com/api/v3/ticker/bookTicker?symbol=BTCUSDT", BinanceTickerDTO.class);
 
 			List<BinanceTickerDTO> binancePrices = binancePriceService.fetchCryptoPrices();
 			List<HuobiTickerDTO> huobiPrices = huobiPriceService.fetchCryptoPrices();
 
-			// Process BTC and ETH pairs
-			processPair("BTCUSDT", binancePrices, huobiPrices);
-			processPair("ETHUSDT", binancePrices, huobiPrices);
+			// Process pairs
+            trackedPairs.forEach(trackedPair -> processPair(trackedPair, binancePrices, huobiPrices));
 
 			// List<HuobiTickerDTO> huobiTickerDTO = new HuobiPriceService().fetchCryptoPrices();
 			// HuobiTickerDTO btcUSDT = huobiTickerDTO.stream()
