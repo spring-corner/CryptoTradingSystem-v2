@@ -4,6 +4,7 @@ import com.jiachengteo.CryptoTradingSystem.entity.CryptoPrice;
 import com.jiachengteo.CryptoTradingSystem.repository.CryptoPriceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,18 +25,21 @@ public class CryptoPriceController {
 	@Autowired
 	private CryptoPriceRepository cryptoPriceRepository;
 
+    @Value("${trading.supportedPairs}")
+    private String supportedPairsProperty;
+
 	@GetMapping("/latest")
 	public ResponseEntity<Map<String, CryptoPrice>> getLatestPrices() {
 		try {
 			Map<String, CryptoPrice> latestPrices = new HashMap<>();
 
-			// Get latest price for BTCUSDT
-			cryptoPriceRepository.findFirstBySymbolOrderByTimestampDesc("BTCUSDT")
-				.ifPresent(price -> latestPrices.put("BTCUSDT", price));
-
-			// Get latest price for ETHUSDT
-			cryptoPriceRepository.findFirstBySymbolOrderByTimestampDesc("ETHUSDT")
-				.ifPresent(price -> latestPrices.put("ETHUSDT", price));
+            // Dynamically get supported pairs
+            Arrays.stream(supportedPairsProperty.split(","))
+                .map(String::toUpperCase)
+                .forEach(symbol ->
+                    cryptoPriceRepository.findFirstBySymbolOrderByTimestampDesc(symbol)
+                        .ifPresent(price -> latestPrices.put(symbol, price))
+                );
 
 			if (latestPrices.isEmpty()) {
 				return ResponseEntity.noContent().build();

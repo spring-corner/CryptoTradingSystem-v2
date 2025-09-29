@@ -21,11 +21,10 @@ import java.util.stream.Collectors;
 public class BinancePriceService {
 
 	private static final String BINANCE_TICKER_URL = "https://api.binance.com/api/v3/ticker/bookTicker";
-	private static final Set<String> TRACKED_SYMBOLS = Set.of("BTCUSDT", "ETHUSDT");
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	public List<BinanceTickerDTO> fetchCryptoPrices() {
+	public List<BinanceTickerDTO> fetchCryptoPrices(List<String> trackedSymbols) {
 		try {
 			BinanceTickerDTO[] response = restTemplate.getForObject(
 				BINANCE_TICKER_URL,
@@ -34,7 +33,7 @@ public class BinancePriceService {
 
 			if (response != null) {
 				return Arrays.stream(response)
-					.filter(ticker -> TRACKED_SYMBOLS.contains(ticker.getSymbol()))
+					.filter(ticker -> trackedSymbols.contains(ticker.getSymbol().toUpperCase()))
 					.peek(ticker -> log.info("Found Binance ticker: {}", ticker))
 					.collect(Collectors.toList());
 			}

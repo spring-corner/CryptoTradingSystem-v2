@@ -6,9 +6,11 @@ import com.jiachengteo.CryptoTradingSystem.entity.CryptoPrice;
 import com.jiachengteo.CryptoTradingSystem.repository.CryptoPriceRepository;
 import com.jiachengteo.CryptoTradingSystem.service.BinancePriceService;
 import com.jiachengteo.CryptoTradingSystem.service.HuobiPriceService;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -16,9 +18,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ScheduledTasks {
@@ -35,51 +37,27 @@ public class ScheduledTasks {
 	@Autowired
 	private HuobiPriceService huobiPriceService;
 
-    private final List<String> trackedPairs = Arrays.asList("BTCUSDT", "ETHUSDT");
+    // Inject supported pairs from application.properties
+    @Value("${trading.supportedPairs}")
+    private String supportedPairsProperty;
+    private List<String> trackedPairs;
+
+    @PostConstruct
+    public void init() {
+        // Parse and store as uppercase for consistency
+        trackedPairs = Arrays.stream(supportedPairsProperty.split(","))
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
+    }
 
 	@Scheduled(fixedRate = 10000) // 10 seconds
 	public void consumeRestService() {
+		try {
+            List<BinanceTickerDTO> binancePrices = binancePriceService.fetchCryptoPrices(trackedPairs);
+            List<HuobiTickerDTO> huobiPrices = huobiPriceService.fetchCryptoPrices(trackedPairs);
 
-		// CryptoPrice quote = restTemplate.getForObject(
-		// 	"https://api.binance.com/api/v3/ticker/bookTicker?symbol=BTCUSDT", CryptoPrice.class);
-		// assert quote != null;
-		// log.info(quote.toString());
-
-		try {// First get the response as DTO
-//			BinanceTickerDTO tickerDTO = restTemplate.getForObject("https://api.binance.com/api/v3/ticker/bookTicker?symbol=BTCUSDT", BinanceTickerDTO.class);
-
-			List<BinanceTickerDTO> binancePrices = binancePriceService.fetchCryptoPrices();
-			List<HuobiTickerDTO> huobiPrices = huobiPriceService.fetchCryptoPrices();
-
-			// Process pairs
+            // Process pairs
             trackedPairs.forEach(trackedPair -> processPair(trackedPair, binancePrices, huobiPrices));
-
-			// List<HuobiTickerDTO> huobiTickerDTO = new HuobiPriceService().fetchCryptoPrices();
-			// HuobiTickerDTO btcUSDT = huobiTickerDTO.stream()
-			// 	.filter(ticker -> "btcusdt".equalsIgnoreCase(ticker.getSymbol()))
-			// 	.findFirst()
-			// 	.orElse(null);
-			// assert btcUSDT != null;
-			// log.info(btcUSDT.getSymbol());
-			// log.info(btcUSDT.getBid().toString());
-			// log.info(btcUSDT.getAsk().toString());
-			//
-			//
-			// if (tickerDTO != null) {
-			// 	// Map DTO to Entity
-			// 	CryptoPrice cryptoPrice = new CryptoPrice();
-			// 	cryptoPrice.setSymbol(tickerDTO.getSymbol());
-			// 	cryptoPrice.setBidPrice(new BigDecimal(tickerDTO.getBidPrice()));
-			// 	cryptoPrice.setAskPrice(new BigDecimal(tickerDTO.getAskPrice()));
-			// 	cryptoPrice.setBidSize(new BigDecimal(tickerDTO.getBidQty()));
-			// 	cryptoPrice.setAskSize(new BigDecimal(tickerDTO.getAskQty()));
-			// 	cryptoPrice.setTimestamp(Instant.now());
-			//
-			// 	// Save to database
-			// 	cryptoPriceRepository.save(cryptoPrice);
-			//
-			// 	log.info("Saved price data: {}", cryptoPrice);
-			// }
 		} catch (RestClientException e) {
 			log.error("Error fetching price data: {}", e.getMessage());
 		}

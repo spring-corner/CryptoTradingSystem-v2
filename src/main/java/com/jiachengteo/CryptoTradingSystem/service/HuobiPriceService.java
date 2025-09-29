@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,14 +19,13 @@ import java.util.stream.Collectors;
 public class HuobiPriceService {
 
 	private static final String HUOBI_TICKERS_URL = "https://api.huobi.pro/market/tickers";
-	private static final Set<String> TRACKED_SYMBOLS = Set.of("btcusdt", "ethusdt");
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
 	@Autowired
 	private CryptoPriceRepository cryptoPriceRepository;
 
-	public List<HuobiTickerDTO> fetchCryptoPrices() {
+	public List<HuobiTickerDTO> fetchCryptoPrices(List<String> trackedSymbols) {
 		try {
 			HuobiResponse response = restTemplate.getForObject(
 				HUOBI_TICKERS_URL,
@@ -36,7 +34,7 @@ public class HuobiPriceService {
 
 			if (response != null && response.getData() != null) {
 				return response.getData().stream()
-					.filter(ticker -> TRACKED_SYMBOLS.contains(ticker.getSymbol().toLowerCase()))
+					.filter(ticker -> trackedSymbols.contains(ticker.getSymbol().toUpperCase()))
 					.peek(ticker -> log.info("Found ticker: {}", ticker))
 					.collect(Collectors.toList());
 			}
@@ -50,8 +48,8 @@ public class HuobiPriceService {
 		}
 	}
 
-	public void processCryptoPrices() {
-		List<HuobiTickerDTO> prices = fetchCryptoPrices();
+	public void processCryptoPrices(List<String> trackedSymbols) {
+		List<HuobiTickerDTO> prices = fetchCryptoPrices(trackedSymbols);
 
 		prices.forEach(price -> {
 			CryptoPrice cryptoPrice = new CryptoPrice();
