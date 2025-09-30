@@ -1,0 +1,14 @@
+[
+  {
+    "symbol": "BTCUSDT",
+    "bidPrice": "27123.45",
+    "askPrice": "27124.00",
+    "volume": "100.5"
+  },
+  {
+    "symbol": "ETHUSDT",
+    "bidPrice": "1800.12",
+    "askPrice": "1800.50",
+    "volume": "200.0"
+  }
+]

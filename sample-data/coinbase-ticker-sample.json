@@ -1,0 +1,16 @@
+[
+  {
+    "id": "BTC-USD",
+    "base_currency": "BTC",
+    "quote_currency": "USD",
+    "bid": "27123.45",
+    "ask": "27124.00"
+  },
+  {
+    "id": "ETH-USD",
+    "base_currency": "ETH",
+    "quote_currency": "USD",
+    "bid": "1800.12",
+    "ask": "1800.50"
+  }
+]

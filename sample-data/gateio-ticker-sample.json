@@ -1,0 +1,14 @@
+[
+  {
+    "currency_pair": "BTC_USDT",
+    "highest_bid": "27123.45",
+    "lowest_ask": "27124.00",
+    "base_volume": "100.5"
+  },
+  {
+    "currency_pair": "ETH_USDT",
+    "highest_bid": "1800.12",
+    "lowest_ask": "1800.50",
+    "base_volume": "200.0"
+  }
+]
