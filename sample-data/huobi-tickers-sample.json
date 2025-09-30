@@ -1,0 +1,35 @@
+{
+  "status": "ok",
+  "ts": 1696060800000,
+  "data": [
+    {
+      "symbol": "btcusdt",
+      "open": 27100.00,
+      "high": 27200.00,
+      "low": 27000.00,
+      "close": 27150.00,
+      "amount": 100.5,
+      "vol": 2715000.00,
+      "count": 1200,
+      "bid": 27149.50,
+      "bidSize": 0.8,
+      "ask": 27150.00,
+      "askSize": 1.2
+    },
+    {
+      "symbol": "ethusdt",
+      "open": 1800.00,
+      "high": 1810.00,
+      "low": 1795.00,
+      "close": 1805.00,
+      "amount": 200.0,
+      "vol": 361000.00,
+      "count": 900,
+      "bid": 1804.50,
+      "bidSize": 2.0,
+      "ask": 1805.00,
+      "askSize": 1.5
+    }
+    // ... more sample pairs
+  ]
+}
